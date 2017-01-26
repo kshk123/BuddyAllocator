@@ -10,33 +10,57 @@ INCLUDES = -I ./inc
 #define libraries to be included
 #LIBS = -lstdc++
 
-#define the C compiler to use
-CC = gcc
+#define any compile-time flags for debug executable
+DCFLAGS = -Wall -Werror -g
 
-#define any compile-time flags
-CFLAGS = -Wall -Werror -g
+#define any linking-time flags for debug executable
+DLFLAGS = 
 
-# define prerequisites (source files)
-SOURCES =       $(SRC_DIR)/BuddyAllocator.c
+#define any compile-time flags for release shared object
+RCFLAGS = -fPIC -Wall -Werror -O3
 
-SRCS = $(notdir $(SOURCES))
+#define any linking-time flags for release shared object
+RLFLAGS = -shared
 
-# define the executable file 
-MAIN = buddy
+# define prerequisites (source files for debug executable)
+DSOURCES =       $(SRC_DIR)/BuddyAllocator.c\
+					$(SRC_DIR)/BuddyAllocatorTest.c
 
-OBJS = $(patsubst %.c,$(OBJ_DIR)/%.o, $(filter %.c, $(SRCS)))
+# define prerequisites (source files for release shared object)
+RSOURCES =       $(SRC_DIR)/BuddyAllocator.c
 
-all:    $(MAIN)
+DSRCS = $(notdir $(DSOURCES))
 
-$(MAIN): $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDES) $(LIBS) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+RSRCS = $(notdir $(RSOURCES))
+
+# define the test executable file 
+TESTEXE = buddyTest
+
+# define the test executable file 
+RELEASELIB = libBuddy.so
+
+DOBJS = $(patsubst %.c,$(OBJ_DIR)/%.o, $(filter %.c, $(DSRCS)))
+
+ROBJS = $(patsubst %.c,$(OBJ_DIR)/%.o, $(filter %.c, $(RSRCS)))
+
+all:    $(TESTEXE) $(RELEASELIB)
+
+test:   $(TESTEXE)
+
+release: $(RELEASELIB)
+
+$(TESTEXE): $(DOBJS)
+	$(CC) $(DCFLAGS) $(INCLUDES) $(LIBS) -o $(TESTEXE) $(DOBJS) $(DLFLAGS) $(LIBS)
+
+$(RELEASELIB): $(ROBJS)
+	$(CC) $(RCFLAGS) $(INCLUDES) $(LIBS) -o $(RELEASELIB) $(ROBJS) $(RLFLAGS) $(LIBS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
+	$(CC) $(DCFLAGS) $(INCLUDES) -c -o $@ $<
 
 clean:
 	@-rm -rf $(OBJ_DIR)/*
-	@-rm -r $(MAIN)
+	@-rm -r $(TESTEXE) $(RELEASELIB)
 
 
 
