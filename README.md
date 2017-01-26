@@ -1,5 +1,5 @@
 # BuddyAllocator
-Implemention of a buddy allocator for memory handling.
+Implementation of a buddy allocator for memory handling.
 
 There is one basic limitation in the implementation, the order has to be passed
 by the user when returning to the buddy allocator, and no error checking is present
