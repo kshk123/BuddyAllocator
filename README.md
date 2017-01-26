@@ -4,7 +4,7 @@ Implemention of a buddy allocator for memory handling.
 There is one basic limitation in the implementation, the order has to be passed
 by the user when returning to the buddy allocator, and no error checking is present
 if the order is not correct. This has to be enhanced so that the order is maintained
-by the allocator itself, without having the user t pass it.
+by the allocator itself, without having the user to pass it.
 
 The Makefile provides option to build a shared library (libBuddy.so) using the command
 'make release', which can then be linked to an executable.
