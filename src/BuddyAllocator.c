@@ -5,12 +5,20 @@
 buddy_allocator_t *buddy_allocator_create(size_t raw_memory_size)
 {
     buddy_allocator_t * newBuddy = (buddy_allocator_t *)malloc(sizeof(buddy_allocator_t));
-    newBuddy->memStart = malloc(raw_memory_size);
-    if(NULL == newBuddy->memStart)
+    if(NULL == newBuddy)
     {
         printf("Failed to allocate memory.\n");
         return NULL;
     }
+    memset(newBuddy, 0, sizeof(buddy_allocator_t));
+    newBuddy->memStart = malloc(raw_memory_size);
+    if(NULL == newBuddy->memStart)
+    {
+        printf("Failed to allocate memory.\n");
+        free(newBuddy);
+        return NULL;
+    }
+    memset(newBuddy->memStart, 0, raw_memory_size);
     newBuddy->memSize  = raw_memory_size;
     if(!initBuddyAlloc(newBuddy))
     {
